@@ -32,6 +32,11 @@ export default function Home() {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Fill the canvas with white background
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.lineCap = "square";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 5;
@@ -76,6 +81,15 @@ export default function Home() {
     if (!ctxRef.current) return;
     ctxRef.current.lineWidth = ctxRef.current.lineWidth + 5;
   };
+
+  const downloadImage = (e: MouseEvent<HTMLAnchorElement>) => {
+    const link = e.currentTarget;
+    if (!drawingCanvasRef.current) return;
+    link.setAttribute("download", "canvas_image.png");
+    const image = drawingCanvasRef.current.toDataURL("image/png");
+    link.setAttribute("href", image);
+  };
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <h1 className="text-2xl font-bold h-10 flex items-center justify-center">
@@ -86,7 +100,7 @@ export default function Home() {
         <Canvas draw={draw} className="flex  border-red-500 border" />
         <canvas
           ref={drawingCanvasRef}
-          className="flex border-blue-500 border"
+          className="flex border-blue-500 border "
           onMouseDown={startDrawing}
           onMouseMove={drawing}
           onMouseUp={stopDrawing}
@@ -97,6 +111,13 @@ export default function Home() {
         <button onClick={setToDraw}>draw</button>
         <button onClick={setToErase}>erase</button>
         <button onClick={setBorderThicker}>border</button>
+        <a
+          id="download_image_link"
+          href="download_image"
+          onClick={downloadImage}
+        >
+          Download Image
+        </a>
       </div>
     </div>
   );
